@@ -1,0 +1,27 @@
+
+break main
+run
+call initpapi()
+call readpapi(113)
+next
+call readpapi(115)
+next
+call readpapi(117)
+next
+call readpapi(121)
+next
+call readpapi(123)
+next
+call readpapi(125)
+next
+call stoppapi()
+quit
+
+
+
+b test.c:17
+commands 2
+  p i
+  p b
+  continue
+end
