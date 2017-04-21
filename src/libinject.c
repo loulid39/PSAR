@@ -1,6 +1,7 @@
 #include <papi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <unistd.h>
 #include "debug.h"
 #include <sys/types.h>
@@ -9,7 +10,7 @@
 
 
 
-int NB_EVENTS=1;
+int NB_EVENTS=2;
 
 int * events;
 long long * values; 
@@ -30,6 +31,7 @@ void initpapi()
 	values = malloc(sizeof(long long)*NB_EVENTS);
 	
 	events[0]=PAPI_L3_TCM; //PAPI_L2_TCM;
+	events[1]=PAPI_TOT_CYC;
 
 	
 	printf(DEBUG"avail counters is %d\n", PAPI_num_counters ());
@@ -55,8 +57,7 @@ void initpapi()
 void readpapi(int l)
 {     
 	PAPI_read_counters(values, NB_EVENTS);
-	//printf(DEBUG"l2 cache miss %lld %d\n", values[0]);
-	fprintf(fd,"%d, l3 cache miss %lld\n", l,values[0]);
+	fprintf(fd,"%d %lld %f\n", l,values[0],(pow(10,-9)*values[1]));
 	fflush(fd);
 }
 
@@ -71,6 +72,6 @@ void stoppapi()
 		exit(1);
 	}
 		
-	printf(DEBUG"l3 cache miss %lld\n", values[0]);
+	printf(DEBUG"l3 cache miss %lld %f\n", values[0],(pow(10,-9)*values[1]));
 	fclose(fd);
 }
