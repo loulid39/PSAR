@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 		return(-1);
 	}
 	fputs("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head><title>Résultat</title></head>\n<body>\n <table border =0,5>\n",htmlfile);
-	fputs("<thead> <tr> <th width=5% ,align=center > Nb Access </th>\n <th width=5% ,align=center > Pourcentage </th>\n<th width= 5% ,align=center > Time </th>\n \n <th  ,align=center > Ligne Number </th><th  ,align=center > Code Source </th></tr>\n </thead>\n<tbody>",htmlfile);
+	fputs("<thead> <tr> <th width=10% ,align=center > Quantity Mb </th>\n <th width= 5% ,align=center > Pourcentage </th>\n<th width= 10% ,align=center > Time </th>\n \n <th width=5% ,align=center > Ligne Number </th><th  ,align=center > Code Source </th></tr>\n </thead>\n<tbody>",htmlfile);
 
 	memset(ligne, '\0', sizeof(ligne));
 	memset(results, '\0', sizeof(results));
