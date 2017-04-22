@@ -4,7 +4,7 @@ LDFLAFS = -lpapi
 
 
 .PHONY: test clean
-all: main  test
+all: main  color test
 
 
 test: main libinject.so
@@ -17,7 +17,8 @@ libinject.so :  libinject.o
 main: main.c
 	gcc -g -o $@ $<
 	
-	
+color: color.c
+	gcc -o $@ $<	
 
 	
 %.o: %.c
