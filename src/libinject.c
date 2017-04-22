@@ -1,25 +1,27 @@
 #include <papi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <unistd.h>
 #include "debug.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
+#include <math.h>
 
 
 int NB_EVENTS=2;
 
 int * events;
 long long * values; 
+int quant_total;
+int prem = 1;
 
 FILE* fd;
 
 	
 void initpapi()
 {
+	quant_total = 0;
 	fd=fopen("./papi_log.txt", "w+");
 	if(!fd)
 	{
@@ -30,7 +32,7 @@ void initpapi()
 	events = malloc(sizeof(int)*NB_EVENTS);
 	values = malloc(sizeof(long long)*NB_EVENTS);
 	
-	events[0]=PAPI_L3_TCM; //PAPI_L2_TCM;
+	events[0]=PAPI_L2_TCM;
 	events[1]=PAPI_TOT_CYC;
 
 	
@@ -54,11 +56,20 @@ void initpapi()
 
 
 
-void readpapi(int l)
+void readpapi(int l, int bool)
 {     
 	PAPI_read_counters(values, NB_EVENTS);
-	fprintf(fd,"%d %lld %f\n", l,values[0],(pow(10,-9)*values[1]));
-	fflush(fd);
+	quant_total +=values[0]/16384; 
+	if(prem){
+		fprintf(fd,"                    \n");
+		fflush(fd);
+		prem = 0;
+	}
+	if(bool)
+	{
+		fprintf(fd,"%d %lld %f\n", l,(values[0]/16384),(pow(10,-9)*values[1]));
+		fflush(fd);
+	}
 }
 
 
@@ -72,6 +83,9 @@ void stoppapi()
 		exit(1);
 	}
 		
+	fseek(fd,0,SEEK_SET);	
+	fprintf(fd,"%d",quant_total);
+	fflush(fd);
 	printf(DEBUG"l3 cache miss %lld %f\n", values[0],(pow(10,-9)*values[1]));
 	fclose(fd);
 }
