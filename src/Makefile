@@ -7,7 +7,7 @@ LDFLAFS = -lpapi
 all: main  color test
 
 
-test: main libinject.so
+test: main color libinject.so
 	chmod u+x memprof 
 	sh memprof $^ 
 	
