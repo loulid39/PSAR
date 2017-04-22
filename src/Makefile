@@ -4,12 +4,12 @@ LDFLAFS = -lpapi
 
 
 .PHONY: test clean
-all: main main_papi test
+all: main  test
 
 
 test: main libinject.so
 	chmod u+x memprof 
-	sh memprof $< 
+	sh memprof $^ 
 	
 libinject.so :  libinject.o 
 	gcc -shared -o $@ $^ 
