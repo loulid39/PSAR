@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 	char aligne[6];
 	char c='\0';
 	
-	if((codefile = fopen("main.c", "r") )== NULL) // code source en lecture
+	if((codefile = fopen(argv[1], "r") )== NULL) // code source en lecture
 	{
 		perror("Error opening file c");
 		return(-1);
