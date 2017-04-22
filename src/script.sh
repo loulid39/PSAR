@@ -10,7 +10,7 @@ c=1
 for addr in `objdump -d -j .text $1 | awk -vRS=  '/<main>/' | grep callq | awk '{ print $1}' | sed 's/://g'`;
 do
 	echo "addr is 0x$addr"
-	line=`addr2line -a 0x$addr -e main | tail -n1`
+	line=`addr2line -a 0x$addr -e $1 | tail -n1`	
 	echo "line is $line"
 	number=`echo $line | grep -o -e [0-9]*$`
 	
