@@ -32,7 +32,7 @@ void initpapi()
 	events = malloc(sizeof(int)*NB_EVENTS);
 	values = malloc(sizeof(long long)*NB_EVENTS);
 	
-	events[0]=PAPI_L2_TCM;
+	events[0]=PAPI_L3_TCM;
 	events[1]=PAPI_TOT_CYC;
 
 	
