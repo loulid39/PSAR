@@ -3,9 +3,12 @@
 
 #$1 le nom du fichier à tester
 
-export LD_PRELOAD=$HOME/psar/src/libinject.so:$HOME/psar/papi-5.5.1/src/libpapi.so:$HOME/psar/papi-5.5.1/src/libpfm4/lib/libpfm.so
 
 
-gdb $1 -x ./commands -q -batch
-
+echo "Generation du script commande ..."
+bash script.sh $1 >> /dev/null
+echo "terminée"
+echo "Execution de gdb"
+gdb $1 -x ./commands -q -batch >> /dev/null
+echo "fin" 
 
