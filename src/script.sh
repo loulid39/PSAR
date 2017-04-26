@@ -3,7 +3,7 @@
 source .config
 
 LIBPAPY=$PATH_TO_PSAR/papi-5.5.1/src
-LIBINJECT=$PATH_TO_PSAR/src
+LIBINJECT=$PATH_TO_PSAR/src/lib
 
 
 
@@ -39,7 +39,7 @@ echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
 
 
 
-echo -e "set logging file gdb.txt\nset logging on\nset pagination off" >> commands
+echo -e "set logging file gdb.log\nset logging on\nset pagination off" >> commands
 
 echo "set env LD_PRELOAD=$LIBINJECT/libinject.so:$LIBPAPY/libpapi.so:$LIBPAPY/libpfm4/lib/libpfm.so" >>commands
 

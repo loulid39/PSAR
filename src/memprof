@@ -11,6 +11,6 @@ echo "terminée"
 echo "Execution de gdb"
 gdb $1 -x ./commands -q -batch >> /dev/null
 echo "Génération du résultat.html"
-./color
+./color $2
 x-www-browser resultat.html
 echo "fin" 
