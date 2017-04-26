@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "debug.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -38,7 +37,7 @@ void initpapi()
 	events[1]=PAPI_TOT_CYC;
 
 	
-	printf(DEBUG"avail counters is %d\n", PAPI_num_counters ());
+	printf("avail counters is %d\n", PAPI_num_counters ());
 
 
 	const PAPI_hw_info_t *hwinfo = NULL;
@@ -50,7 +49,7 @@ void initpapi()
 	int retval;
 	if( (retval=PAPI_start_counters( events, NB_EVENTS )) != PAPI_OK )
 	{
-		fprintf(stderr,DEBUG"start counters %d", retval);
+		fprintf(stderr,"start counters %d", retval);
          	exit(1);
         }  
         
@@ -88,6 +87,6 @@ void stoppapi()
 	fseek(fd,0,SEEK_SET);	
 	fprintf(fd,"%d",quant_total);
 	fflush(fd);
-	printf(DEBUG"l3 cache miss %lld %f\n", values[0],(pow(10,-9)*values[1]));
+	printf("l3 cache miss %lld %f\n", values[0],(pow(10,-9)*values[1]));
 	fclose(fd);
 }
