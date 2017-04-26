@@ -32,7 +32,14 @@ do
 done
 
 c=`expr $c + 1`
-last_line=`objdump -d -j .text $1 | awk -vRS=  '/<main>/'  | tail -1 | awk '{ print $1}' | sed 's/://g'`
+last_line=`objdump -d -j .text $1 | awk -vRS=  '/<main>/'  | grep retq`
+
+if  [ -z "$last_line" ]; then
+    last_line=`objdump -d -j .text $1 | awk -vRS=  '/<main>/'  | tail -1`
+fi;
+
+last_line=`echo $last_line| awk '{ print $1}' | sed 's/://g'`
+
 echo "b *0x$last_line">>commands
 echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
 
@@ -40,7 +47,6 @@ echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
 
 
 echo -e "set logging file gdb.log\nset logging on\nset pagination off" >> commands
-
 echo "set env LD_PRELOAD=$LIBINJECT/libinject.so:$LIBPAPY/libpapi.so:$LIBPAPY/libpfm4/lib/libpfm.so" >>commands
 
 echo "run" >> commands

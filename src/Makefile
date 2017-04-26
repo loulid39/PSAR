@@ -7,7 +7,7 @@ all: color
 color: color.c
 	gcc -o $@ $<	
 
-test:
+test: color
 	make -C lib
 	make -C test main
 	chmod u+x memprof 
