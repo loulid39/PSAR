@@ -2,8 +2,10 @@
 
 
 .PHONY: test clean
-all: color test
+all: color
 
+color: color.c
+	gcc -o $@ $<	
 
 test:
 	make -C lib
@@ -12,8 +14,7 @@ test:
 	sh memprof test/main test/main.c
 
 	
-color: color.c
-	gcc -o $@ $<	
+
 	
 %.o: %.c
 	gcc -g $(CFLAGS) $< -I $(LIBPAPY)
