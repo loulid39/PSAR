@@ -8,7 +8,7 @@ LIBINJECT=$PATH_TO_PSAR/src/lib
 
 
 echo "break main" > commands
-echo -e "command 1\n call initpapi()\n continue \nend" >>commands
+echo -e "command 1\n\tcall initpapi()\n\tcontinue\nend" >>commands
 
 
 
@@ -24,10 +24,10 @@ do
 	echo "break `expr $number + 1`"		>>commands
 	
 	c=`expr $c + 1`
-	echo -e "command $c \n call readpapi($number,0) \n continue \nend" 	>>commands
+	echo -e "command $c\n\tcall readpapi($number,0)\n\tcontinue\nend" 	>>commands
 	
 	c=`expr $c + 1`
-	echo -e "command $c \n call readpapi($number,1)\n continue \nend" 	>>commands
+	echo -e "command $c\n\tcall readpapi($number,1)\n\tcontinue\nend" 	>>commands
 	
 done
 
@@ -41,7 +41,7 @@ fi;
 last_line=`echo $last_line| awk '{ print $1}' | sed 's/://g'`
 
 echo "b *0x$last_line">>commands
-echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
+echo -e "command $c\n\tcall stoppapi()\n\tcontinue\nend" >>commands
 
 
 
