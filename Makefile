@@ -6,7 +6,7 @@ install:
 	 ./configure
 	echo "PATH_TO_PSAR="`pwd`"" > src/.config
 	make -j9 -C papi-5.5.1/src shared
-	make -C src main libinject.so
+	make -C src/lib
 	
 	
 test:
