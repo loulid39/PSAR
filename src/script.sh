@@ -32,7 +32,7 @@ do
 done
 
 c=`expr $c + 1`
-last_line=`objdump -d -j .text $1 | awk -vRS=  '/<main>/'  | grep retq | awk '{ print $1}' | sed 's/://g'`
+last_line=`objdump -d -j .text $1 | awk -vRS=  '/<main>/'  | tail -1 | awk '{ print $1}' | sed 's/://g'`
 echo "b *0x$last_line">>commands
 echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
 

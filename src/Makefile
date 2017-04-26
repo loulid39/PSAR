@@ -21,6 +21,6 @@ test:
 	
 	
 clean:
-	rm -f *.o commands
+	rm -f *.o color commands
 	
 	
