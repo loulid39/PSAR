@@ -1,7 +1,9 @@
 
+include .config
+
 CFLAGS= -fPIC  -c
 LDFLAFS = -lpapi
-
+LIBPAPY = $(PATH_TO_PSAR)/papi-5.5.1/src/
 
 .PHONY: test clean
 all: main  color test
@@ -22,7 +24,7 @@ color: color.c
 
 	
 %.o: %.c
-	gcc -g $(CFLAGS) $< -I $(HOME)/psar/papi-5.5.1/src/
+	gcc -g $(CFLAGS) $< -I $(LIBPAPY)
 	
 	
 clean:

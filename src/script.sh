@@ -1,5 +1,11 @@
 #!/bin/bash
 
+source .config
+
+LIBPAPY=$PATH_TO_PSAR/papi-5.5.1/src
+LIBINJECT=$PATH_TO_PSAR/src
+
+
 
 echo "break main" > commands
 echo -e "command 1\n call initpapi()\n continue \nend" >>commands
@@ -10,7 +16,7 @@ c=1
 for addr in `objdump -d -j .text $1 | awk -vRS=  '/<main>/' | grep callq | awk '{ print $1}' | sed 's/://g'`;
 do
 	echo "addr is 0x$addr"
-	line=`addr2line -a 0x$addr -e $1 | tail -n1`	
+	line=`addr2line -a 0x$addr -e $1 | tail -n1`
 	echo "line is $line"
 	number=`echo $line | grep -o -e [0-9]*$`
 	
@@ -35,6 +41,6 @@ echo -e "command $c\n call stoppapi()\n continue \n end" >>commands
 
 echo -e "set logging file gdb.txt\nset logging on\nset pagination off" >> commands
 
-echo "set env LD_PRELOAD=$HOME/psar/src/libinject.so:$HOME/psar/papi-5.5.1/src/libpapi.so:$HOME/psar/papi-5.5.1/src/libpfm4/lib/libpfm.so" >>commands
+echo "set env LD_PRELOAD=$LIBINJECT/libinject.so:$LIBPAPY/libpapi.so:$LIBPAPY/libpfm4/lib/libpfm.so" >>commands
 
 echo "run" >> commands
