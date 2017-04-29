@@ -16,7 +16,9 @@ typedef struct {
 int main(int argc, char **argv){
 	char Tableau[100000];	// utilisé pour généré le .html
 	DATA result [40]; 	// les résultats généré par le profileur
-	char ligne[255];	// une ligne du fichier .c
+	char ligne_[255];
+	char ligne[255];	// une ligne du fichier .c	
+	char * ligtmp;
 	char results [40];
 	char numligne[6];
 	char nbaccess[10];
@@ -28,7 +30,9 @@ int main(int argc, char **argv){
 	FILE *codefile;
 	FILE *resultat;
 	FILE *htmlfile;
+	char ** resume;
 	int i=0;
+	int n=0;
 
 	int nbligne=0;
 	int tacces=0;	//total access
@@ -52,9 +56,69 @@ int main(int argc, char **argv){
 		perror("Error opening file html");
 		return(-1);
 	}
-	fputs("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head><title>Résultat</title></head>\n<body>\n <table border =0,5>\n",htmlfile);
-	fputs("<thead> <tr> <th width=10% ,align=center > Quantity MB </th>\n <th width= 5% ,align=center > Pourcentage </th>\n<th width= 10% ,align=center > Time s </th>\n \n <th width=5% ,align=center > Ligne Number </th><th  ,align=center > Code Source </th></tr>\n </thead>\n<tbody>",htmlfile);
 
+	fputs("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head><title>Résultat</title></head>\n<body>\n ",htmlfile);
+
+	fputs("<h2 align = center >R&eacute;sultat Du Profilage sur le fichier ",htmlfile);
+	fputs(argv[2],htmlfile);
+	fputs("</h2>",htmlfile);
+	fputs("<table><tr><td width= 40%>",htmlfile);
+
+	fputs("<table frame = \"box\" rules=\"rows\">\n<thead > <tr> <th width=20% ,align=center  > Ligne </th>\n <th width= 20% ,align=center  > Quantity MB </th>\n<th width= 20% ,align=center  > Pourcentage </th>\n \n <th width=20% ,align=center  > Time </th>\n </tr></thead>\n<tbody>",htmlfile);
+	memset(results, '\0', sizeof(results));
+
+	if(fgets(results,40,resultat)!=NULL)
+	{
+	
+
+		tacces=atoi(results);
+		memset(results, '\0', sizeof(results));
+		while(fgets(results,40,resultat)!=NULL)
+		{
+			int taille=strlen(results)-strlen(strchr(results,' '));
+			memset(numligne, '\0', sizeof(numligne));
+			strncpy(numligne,results,taille);			//
+			strcpy(results,&results[taille+1]);
+			taille=strlen(results)-strlen(strchr(results,' '));
+			memset(nbaccess, '\0', sizeof(nbaccess));
+			strncpy(nbaccess,results,taille);			//
+			memset(temps, '\0', sizeof(temps));
+			strcpy(temps,&results[taille+1]);			//
+			sprintf(praccess,"%.2f",(atof(nbaccess)*100)/tacces);	//
+			couleur= (int)(((atof(nbaccess)*100)/tacces)/25);
+			fputs("<tr><td align=center bgcolor = ",htmlfile);
+			fputs(color[couleur],htmlfile);	
+			fputs(" >",htmlfile);
+			fputs(numligne,htmlfile);
+			fputs("</td><td align=center bgcolor = ",htmlfile);
+			fputs(color[couleur],htmlfile);	
+			fputs(" >",htmlfile);
+			fputs(nbaccess,htmlfile);
+			fputs("</td><td align=center bgcolor = ",htmlfile);
+			fputs(color[couleur],htmlfile);	
+			fputs(" >",htmlfile);
+			fputs(praccess,htmlfile);
+			fputs("</td><td align=center bgcolor = ",htmlfile);
+			fputs(color[couleur],htmlfile);	
+			fputs(" %>",htmlfile);
+			fputs(temps,htmlfile);
+			fputs("</td></tr>",htmlfile);	
+			
+		}
+	}
+	
+	fputs("</tbody></table>",htmlfile);
+	fputs("</td><td  width= 30%> </td></tr></table>",htmlfile);
+	fputs("<p><pre>R&eacute;sum&eacute; des lignes dont un appel de fonction est effectu&eacute;.</pre></p>",htmlfile);
+	//ici un while pour le petit tableau	
+	
+	fputs("<table frame = \"box\" rules=\"cols\">\n<thead > <tr> <th width=10% ,align=center bgcolor =#CFFC95 > Quantity MB </th>\n <th width= 5% ,align=center bgcolor =#CFFC95 > Pourcentage </th>\n<th width= 10% ,align=center bgcolor =#CFFC95 > Time s </th>\n \n <th width=5% ,align=center bgcolor =#CFFC95 > Ligne Number </th><th  ,align=center bgcolor =#CFFC95> Code Source </th></tr>\n </thead>\n<tbody>",htmlfile);
+	fclose(resultat);
+	if((resultat = fopen("papi_log.txt", "r") )== NULL) // le loge des résultats du profileur en lecture
+	{
+		perror("Error opening file txt");
+		return(-1);
+	}
 	memset(ligne, '\0', sizeof(ligne));
 	memset(results, '\0', sizeof(results));
 	int intern;
@@ -78,11 +142,25 @@ int main(int argc, char **argv){
 			strcpy(temps,&results[taille+1]);
 			//printf("%s \n ", temps);
 			intern=1;
-			while(intern==1 && fgets(ligne, 255,codefile)!=NULL)
+			while(intern==1 && fgets(ligne_, 255,codefile)!=NULL)
 			{	// lire la ligne
+
+				if((ligtmp=strchr(ligne_,'<'))!=NULL){
+					taille= strlen(ligne_)-strlen(ligtmp);
+					strncpy(ligne,ligne_, taille);
+					strcat(ligne,"&lt;\0");
+					strcat(ligne,&ligtmp[1]);
+					//strcpy(&ligne_[taille],"&lt;\0");	
+				}
+				else{
+				
+					strcpy(ligne,ligne_);
+				}
+
+				//printf("%s",ligne);
 				couleur=4;
 				nbligne++;
-				fputs("<tr><td align=center  bgcolor = ",htmlfile);
+				fputs("<tr height=\"10\" ><td align=center bgcolor = ",htmlfile);
 				memset(aligne, '\0', sizeof(aligne));
 				//printf("%s : %d --> %d\n",numligne,atoi(numligne), nbligne);
 				if(atoi(numligne)==nbligne)
@@ -120,9 +198,10 @@ int main(int argc, char **argv){
 				fputs(aligne,htmlfile);
 				fputs("</td><td align=left bgcolor = ",htmlfile);
 				fputs(color[couleur],htmlfile);
-				fputs(" >",htmlfile);	
+				fputs(" ><pre>",htmlfile);
+				ligne[strlen(ligne)-1]='\0';	
 				fputs(ligne,htmlfile);
-				fputs("</td>\n",htmlfile);
+				fputs("</pre></td>\n",htmlfile);
 				memset(ligne, '\0', sizeof(ligne));
 		
 			}
@@ -136,13 +215,15 @@ int main(int argc, char **argv){
 		memset(aligne, '\0', sizeof(aligne));
 		sprintf(aligne,"%d",nbligne);
 		fputs(aligne,htmlfile);
-		fputs("</td><td align=left>",htmlfile);
+		fputs("</td><td align=left><pre>",htmlfile);
+		ligne[strlen(ligne)-1]='\0';	
 		fputs(ligne,htmlfile);
-		fputs("</td>\n",htmlfile);
+		fputs("</pre></td>\n",htmlfile);
 		memset(ligne, '\0', sizeof(ligne));
 		
 	}
 	fputs("</tbody>\n</table>\n</body>\n </html>\n",htmlfile);
+
 	fclose(htmlfile);
 	fclose(resultat);
 	fclose(codefile);
