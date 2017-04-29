@@ -1,0 +1,12 @@
+*.o
+*.so
+*.lo
+papi-5.5.1/
+src/.config
+*~
+src/gdb.log
+src/resultat.html
+src/papi_log.txt
+src/commands
+src/color
+
